@@ -1,20 +1,51 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MainApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  final onBeginFrame = game();
+  PlatformDispatcher.instance.onBeginFrame = onBeginFrame;
+  PlatformDispatcher.instance.scheduleFrame();
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+// Static values
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+// Game setting
+final kBackgroundPaint = Paint()..color = Colors.white;
+final kGamePaint = Paint()..color = Colors.black;
+const kGameRows = 60;
+const kGameColumns = 44;
+const kGameTilesize = 20.0;
+const kGameW = kGameColumns * kGameTilesize;
+const kGameH = kGameRows * kGameTilesize;
+const kGameRectBackground = Rect.fromLTWH(0, 0, kGameW, kGameH);
+
+// Pac-man settings
+const kPacmanSize = kGameTilesize;
+final kPacmanPaint = Paint()..color = Colors.yellow;
+
+Function(Duration) game() {
+    void onBeginFrame(Duration timeStamp) {
+        PlatformDispatcher.instance.scheduleFrame();
+        final recorder = PictureRecorder();
+        final canvas = Canvas(recorder);
+
+        // Use canvas to draw
+        // Draw background
+        canvas.drawRect(Rect.largest, kBackgroundPaint);
+
+        // Draw game area
+        canvas.drawRect(kGameRectBackground, kGamePaint);
+
+        // Draw pac-man
+        canvas.drawCircle(const Offset(100, 100), kPacmanSize/ 2, kPacmanPaint);
+
+        final picture = recorder.endRecording();
+        final sceneBuilder = SceneBuilder();
+        sceneBuilder.addPicture(const Offset(150, 300), picture);
+        final scene = sceneBuilder.build();
+        PlatformDispatcher.instance.views.first.render(scene);
+    }
+    return onBeginFrame;
 }

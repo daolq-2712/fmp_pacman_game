@@ -1,7 +1,7 @@
 # Pac-man game
 
 To-do list:
-[] Add pac-man
+[x] Add pac-man
 [] Control pac-man with keys
 [] Add the maze
 [] Detect collision
