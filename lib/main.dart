@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final onBeginFrame = game();
-  PlatformDispatcher.instance.onBeginFrame = onBeginFrame;
+  final game = Game();
+  PlatformDispatcher.instance.onBeginFrame = game.onBeginFrame;
   PlatformDispatcher.instance.scheduleFrame();
 }
 
@@ -25,27 +25,26 @@ const kGameRectBackground = Rect.fromLTWH(0, 0, kGameW, kGameH);
 const kPacmanSize = kGameTilesize;
 final kPacmanPaint = Paint()..color = Colors.yellow;
 
-Function(Duration) game() {
-    void onBeginFrame(Duration timeStamp) {
-        PlatformDispatcher.instance.scheduleFrame();
-        final recorder = PictureRecorder();
-        final canvas = Canvas(recorder);
+class Game {
+  void onBeginFrame(Duration timeStamp) {
+    PlatformDispatcher.instance.scheduleFrame();
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
 
-        // Use canvas to draw
-        // Draw background
-        canvas.drawRect(Rect.largest, kBackgroundPaint);
+    // Use canvas to draw
+    // Draw background
+    canvas.drawRect(Rect.largest, kBackgroundPaint);
 
-        // Draw game area
-        canvas.drawRect(kGameRectBackground, kGamePaint);
+    // Draw game area
+    canvas.drawRect(kGameRectBackground, kGamePaint);
 
-        // Draw pac-man
-        canvas.drawCircle(const Offset(100, 100), kPacmanSize/ 2, kPacmanPaint);
+    // Draw pac-man
+    canvas.drawCircle(const Offset(100, 100), kPacmanSize / 2, kPacmanPaint);
 
-        final picture = recorder.endRecording();
-        final sceneBuilder = SceneBuilder();
-        sceneBuilder.addPicture(const Offset(150, 300), picture);
-        final scene = sceneBuilder.build();
-        PlatformDispatcher.instance.views.first.render(scene);
-    }
-    return onBeginFrame;
+    final picture = recorder.endRecording();
+    final sceneBuilder = SceneBuilder();
+    sceneBuilder.addPicture(const Offset(150, 300), picture);
+    final scene = sceneBuilder.build();
+    PlatformDispatcher.instance.views.first.render(scene);
+  }
 }

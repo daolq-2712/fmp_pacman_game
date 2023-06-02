@@ -2,6 +2,7 @@
 
 To-do list:
 [x] Add pac-man
+[x] Fix: hot-reload doesn't work
 [] Control pac-man with keys
 [] Add the maze
 [] Detect collision
