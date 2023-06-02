@@ -4,7 +4,7 @@ To-do list:
 [x] Add pac-man
 [x] Fix: hot-reload doesn't work
 [x] Control pac-man with keys
-[] Add the maze
+[x] Add the maze
 [] Detect collision
 [] Allow moving across the edges
 [] Add ghosts
